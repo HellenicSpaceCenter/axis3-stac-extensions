@@ -1,0 +1,87 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - main
+  tags:
+    include:
+      - '*'
+
+pool:
+  name: Axis3
+
+variables:
+- group: Github-devops
+
+stages:
+  - stage: PushToGitHub
+    displayName: Mirror Azure DevOps → GitHub
+    jobs:
+      - job: SyncPush
+        displayName: Sync & Push Repository
+        steps:
+
+          - checkout: self
+            persistCredentials: true
+            fetchDepth: 0
+
+          - script: |
+              set -e
+
+              echo "Configuring Git user..."
+              git config user.name "mieron"
+              git config user.email "ieronymaki@planetek.gr"
+
+              echo "Disabling interactive git prompts..."
+              git config --global credential.helper ""
+              git config --global core.askPass ""
+
+              echo "Setting GitHub remote..."
+              git remote remove github 2>/dev/null || true
+              git remote add github https://x-access-token:${GITHUB_TOKEN}@github.com/HellenicSpaceCenter/axis3-stac-extensions.git
+
+              SOURCE_REF="${BUILD_SOURCEBRANCH}"
+
+              echo "Detected ref: $SOURCE_REF"
+
+              ########################################
+              # Branch mirroring
+              ########################################
+              if [[ "$SOURCE_REF" == refs/heads/* ]]; then
+
+                BRANCH="${SOURCE_REF#refs/heads/}"
+                echo "Processing branch: $BRANCH"
+
+                git fetch origin
+                git checkout "$BRANCH"
+
+                echo "Pulling latest Azure DevOps changes..."
+                git pull origin "$BRANCH" --ff-only || true
+
+                echo "Checking GitHub branch existence..."
+                if git ls-remote --heads github "$BRANCH" | grep -q "$BRANCH"; then
+                  git pull github "$BRANCH" --ff-only || true
+                fi
+
+                echo "Pushing branch to GitHub..."
+                git push github "$BRANCH"
+
+              else
+                echo "Not a branch trigger, skipping branch push."
+              fi
+
+              ########################################
+              # ALWAYS push tags
+              ########################################
+              echo "Syncing tags..."
+
+              git fetch origin --tags
+
+              echo "Pushing all tags to GitHub..."
+              git push github --tags || echo "Tags already up to date."
+
+              echo "Mirror complete."
+
+            displayName: Mirror Repository
+            env:
+              GITHUB_TOKEN: $(GITHUB_TOKEN)
