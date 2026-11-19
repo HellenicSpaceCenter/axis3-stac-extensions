@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "axis3hub STAC extension",
+  "description": "Hub metadata extension. Field prefix: hub. Compatibility schema for existing metadata.",
+  "type": "object",
+  "oneOf": [
+    {
+      "properties": {
+        "type": {
+          "const": "Feature"
+        },
+        "properties": {
+          "$ref": "#/definitions/itemProperties"
+        },
+        "assets": {
+          "$ref": "#/definitions/assets"
+        }
+      },
+      "required": [
+        "type",
+        "properties"
+      ]
+    },
+    {
+      "properties": {
+        "type": {
+          "const": "Collection"
+        },
+        "assets": {
+          "$ref": "#/definitions/assets"
+        },
+        "item_assets": {
+          "$ref": "#/definitions/assets"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    }
+  ],
+  "definitions": {
+    "itemProperties": {
+      "type": "object",
+      "properties": {
+        "hub:processId": {
+          "type": "string",
+          "description": "Existing Hub process/run identifier."
+        },
+        "hub:engineId": {
+          "type": "string",
+          "description": "Engine execution identifier, currently process_id_job_id."
+        },
+        "hub:thematicService": {
+          "type": "string",
+          "description": "Thematic service name."
+        },
+        "hub:license": {
+          "type": "string",
+          "description": "Legacy Hub Item license metadata."
+        }
+      },
+      "additionalProperties": true
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/asset"
+      }
+    },
+    "asset": {
+      "type": "object",
+      "properties": {
+        "hub:relativePath": {
+          "type": "string",
+          "description": "Relative asset storage path."
+        },
+        "hub:checksum": {
+          "type": "string",
+          "description": "Asset checksum; current producer uses SHA-256 hex."
+        },
+        "hub:workspaceName": {
+          "type": "string",
+          "description": "Published vector layer GeoServer workspace."
+        },
+        "hub:layerName": {
+          "type": "string",
+          "description": "Published vector layer identifier."
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$id": "https://raw.githubusercontent.com/HellenicSpaceCenter/axis3-stac-extensions/axis3hub-v0.1.0/json-schema/schema.json"
+}
