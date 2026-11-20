@@ -17,6 +17,11 @@ are independent of the reference implementation document version.
   exclude the inline legend metadata introduced afterward.
 - Document the intended `0.1.0` schema identifier and extension declaration.
 - Add schema tests and a GitHub Actions validation workflow.
+- Add the complete catalogue Item `SS-FR-FD-B_20261001T080122d985Z` as a fixture
+  with consumer-style compatibility, declaration, and invalid field type tests.
+- Document local validation and extension adoption using the catalogue example.
+- Manage validation and test dependencies through `pyproject.toml` and `uv.lock`,
+  replacing `requirements-dev.txt` and aligning local and CI test commands.
 
 ### Compatibility
 

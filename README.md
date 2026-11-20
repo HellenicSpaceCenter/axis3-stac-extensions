@@ -1,53 +1,121 @@
 # axis3hub STAC extension
 
-- Extension name: **axis3hub**
-- Field name prefix: **hub**
-- Version: **0.1.0** (independent of reference implementation document v7)
-- Schema: [json-schema/schema.json](json-schema/schema.json)
-- Release history: [CHANGELOG.md](CHANGELOG.md)
-- Versioned identifier: `https://raw.githubusercontent.com/HellenicSpaceCenter/axis3-stac-extensions/axis3hub-v0.1.0/json-schema/schema.json`
+The **axis3hub** extension defines existing custom Hub metadata using the
+**hub** field prefix. Field names, values, and metadata locations stay unchanged.
+It supplements core STAC and other declared extensions.
+
+- Version: **0.1.0**
+- [JSON Schema](json-schema/schema.json)
+- [Changelog](CHANGELOG.md)
 - Scope: Item properties, Item/Collection assets, and Collection Item Asset Definitions.
 
-The processor compatibility baseline is commit `8d0bff0` (7 September 2026).
-Inline `hub:legend` and `hub:legends` are not defined at that baseline and are
-excluded from this release. The separate Legends API uses the service UID in
-Item keywords and returns database definitions; it requires no inline Hub legend field.
-
-This extension standardizes existing Hub metadata without renaming keys or
-changing their locations. It supplements core STAC and other extensions.
+## Fields
 
 | Field | Location | Type | Meaning |
 | --- | --- | --- | --- |
-| hub:processId | Item properties | string | Hub process/run identifier; existing UUID and non-UUID forms remain valid. |
-| hub:engineId | Item properties | string | Engine execution identifier, currently process_id_job_id. |
-| hub:thematicService | Item properties | string | Thematic service name. |
-| hub:license | Item properties | string | Legacy Item license metadata; does not replace Collection license. |
-| hub:relativePath | Asset | string | Relative storage path. |
-| hub:checksum | Asset | string | File checksum; current producer uses SHA-256 hex. |
-| hub:workspaceName | Asset | string | Published vector layer's GeoServer workspace. |
-| hub:layerName | Asset | string | Published vector layer identifier, including existing UUID-based names. |
+| `hub:processId` | Item properties | string | Hub process/run identifier; UUID and non-UUID forms are supported. |
+| `hub:engineId` | Item properties | string | Engine execution identifier. |
+| `hub:thematicService` | Item properties | string | Thematic service name. |
+| `hub:license` | Item properties | string | Legacy Item license metadata; does not replace standard `license`. |
+| `hub:relativePath` | Asset | string | Relative storage path. |
+| `hub:checksum` | Asset | string | File checksum; the current producer uses SHA-256 hex. |
+| `hub:workspaceName` | Asset | string | GeoServer workspace for a published vector layer. |
+| `hub:layerName` | Asset | string | Published vector layer identifier. |
 
-All Hub fields remain optional in this compatibility schema. Stage-dependent
-producer requirements are handled by the Hub operational profile. Historical
-Items may omit newer fields or the extension declaration. No field is renamed
-to axis3hub:*. Unknown additional metadata remains permitted; new Hub fields
-must be added explicitly to this specification and schema before release.
+All eight fields are optional for compatibility with historical metadata. Their
+types are checked when present. Other metadata remains permitted. Inline
+`hub:legend` and `hub:legends` are not defined by this version.
 
-Newly produced/enriched Items declare the versioned schema URL in
-stac_extensions, appending it to existing entries. Validators retain support
-for historical undeclared Items. Collection asset and item_assets support does
-not introduce Item property fields at Collection top level.
+## Declare the extension
 
-## Test and release
+Append this schema URL to the Item's top-level `stac_extensions` array, keeping
+all existing entries:
 
-Install `requirements-dev.txt`, then run `pytest -q`.
-Tests cover all eight fields, legacy omissions, and asset scopes.
+```text
+https://raw.githubusercontent.com/HellenicSpaceCenter/axis3-stac-extensions/axis3hub-v0.1.0/json-schema/schema.json
+```
 
-The release identifier is activated only when the reviewed commit is pushed
-with tag `axis3hub-v0.1.0`. Verify that its raw JSON URL resolves and matches the
-schema bytes before deploying clients that declare it. Do not move an existing
-release tag; use a new version for changes. The pipelines directory mirrors
-Azure DevOps to GitHub; coordinate the source commit/tag with that upstream.
+For example, this is an Item fragment, not a complete STAC Item:
 
-Runtime components vendor this schema for offline validation. Update those
-copies together and test equality with this release artifact before deployment.
+```json
+{
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://raw.githubusercontent.com/HellenicSpaceCenter/axis3-stac-extensions/axis3hub-v0.1.0/json-schema/schema.json"
+  ],
+  "properties": {
+    "hub:processId": "process-123",
+    "hub:thematicService": "security"
+  }
+}
+```
+
+The URL identifies the `json-schema/schema.json` file at release tag
+`axis3hub-v0.1.0`. That tag and file must be published and accessible before
+consumers can resolve the URL. Do not substitute the repository's HTML homepage.
+There is one extension declaration for all its fields, not one per field or asset.
+Existing undeclared Items can be checked directly against the schema without
+renaming fields or adding optional metadata.
+
+## Validate an Item locally
+
+With [uv](https://docs.astral.sh/uv/getting-started/installation/) installed,
+run this from the repository root to create the local `.venv` and install the
+validation and test dependencies from the committed lockfile:
+
+```bash
+uv sync --locked
+```
+
+Save the following as `validate_item.py` and run it with
+`uv run --locked python validate_item.py`. Use the supplied full catalogue
+example, or replace `item_path` with your own Item file:
+
+```python
+import json
+from pathlib import Path
+
+from jsonschema import Draft7Validator
+
+schema = json.loads(Path("json-schema/schema.json").read_text(encoding="utf-8"))
+item_path = Path("tests/fixtures/SS-FR-FD-B_20261001T080122d985Z.json")
+item = json.loads(item_path.read_text(encoding="utf-8"))
+
+Draft7Validator.check_schema(schema)
+validator = Draft7Validator(schema)
+validator.validate(item)  # Raises ValidationError if Hub metadata is invalid.
+print("Item is compatible with the axis3hub schema")
+
+# To adopt the extension, preserve the existing declarations and append its URL.
+extensions = item.setdefault("stac_extensions", [])
+if schema["$id"] not in extensions:
+    extensions.append(schema["$id"])
+validator.validate(item)
+print("Item with the axis3hub declaration also validates")
+```
+
+The example works locally before publication because it reads the schema file.
+Appending the URL alone does not download or apply a schema: the validator above
+explicitly applies the local one. After publication, a STAC validator that resolves
+`stac_extensions` can retrieve the schema through its URL.
+
+This check validates only axis3hub's constraints. Continue validating against
+core STAC and the other extensions separately. It does not download assets,
+verify checksums against file contents, resolve GeoServer layers, or validate
+licenses and authentication. No changes to Hub validators or Stageout are
+required to use the declared extension through their existing STAC flow.
+
+## Run the tests
+
+```bash
+uv run --locked pytest -q
+```
+
+Tests validate the full catalogue example, its adoption of the declaration, and
+incorrect Hub field types. See [test design and fixture provenance](tests/README.md)
+for coverage and limitations.
+
+Dependencies and pytest settings are defined in `pyproject.toml`; `uv.lock`
+records the resolved versions used locally and in CI. This is a schema project,
+not an installable Python package, so uv manages its environment without
+building or publishing a Python distribution.
