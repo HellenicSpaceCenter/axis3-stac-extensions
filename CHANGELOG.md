@@ -22,6 +22,12 @@ are independent of the reference implementation document version.
 - Document local validation and extension adoption using the catalogue example.
 - Manage validation and test dependencies through `pyproject.toml` and `uv.lock`,
   replacing `requirements-dev.txt` and aligning local and CI test commands.
+- Add PySTAC native Item and Collection validation tests covering core STAC,
+  axis3hub metadata, STAC item serialization, and invalid `hub` field types. The
+  tests load the axis3hub schema from the repository into PySTAC's schema cache,
+  so validation runs without downloading the extension schema or requiring its
+  public release URL to be available.
+- Document native PySTAC validation and add its development dependency.
 
 ### Compatibility
 

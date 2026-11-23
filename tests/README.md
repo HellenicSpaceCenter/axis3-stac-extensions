@@ -49,8 +49,8 @@ custom validator implementation.
 The snapshot is compatible with the axis3hub extension's types and locations,
 and the supplied metadata can adopt its declaration without migration.
 
-This is an extension test suite, not an end-to-end deployment test. It does not
-validate core STAC 1.1.0 or the six other declared extensions, prove the release
+The catalogue JSON Schema tests do not validate core STAC 1.1.0 or the six
+other declared extensions. This suite does not prove the release
 URL is published, resolve every declared schema, inspect files, verify checksum
 contents, or check GeoServer/license/authentication behavior. Existing non-Hub
 metadata is retained so accidental rejection of unrelated content is caught;
@@ -61,3 +61,25 @@ fail because a catalogue, identity service, network, or future release tag is
 unavailable. After publication, consumers may resolve the same schema via its
 versioned URL through their normal STAC validator. Public URL resolution must
 be checked separately as part of release verification.
+
+## Native PySTAC validation
+
+`test_pystac_validation.py` additionally exercises PySTAC 1.13.0, matching the
+reference processor's version. It constructs native `Item`, `Asset`, and
+`Collection` objects and calls `Item.validate()` and `Collection.validate()`.
+The real `JsonSchemaSTACValidator` validates both core STAC and the declared
+axis3hub schema. An Item is also saved and reloaded before validation to cover
+serialization. All eight Hub fields have invalid-type rejection cases that
+assert PySTAC raises `STACValidationError` against the axis3hub schema. A separate
+invalid core property confirms core validation also runs.
+
+The validator's schema cache maps the canonical versioned axis3hub URL to the
+repository schema. Core schemas come from PySTAC's bundled cache. No validation
+methods or results are mocked, and publication is not required for these tests.
+
+The unchanged catalogue snapshot is loaded as a PySTAC Item and checked through
+`JsonSchemaSTACValidator.validate_extension()` for axis3hub specifically. Its six
+other declarations are retained but not validated by this scoped check. Hrefs
+are serialized without transformation so PySTAC does not resolve catalogue root
+links or require catalogue authentication. This check does not claim that the
+historical snapshot passes full core or unrelated extension validation.

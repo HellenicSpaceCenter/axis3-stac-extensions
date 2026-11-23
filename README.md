@@ -105,6 +105,33 @@ verify checksums against file contents, resolve GeoServer layers, or validate
 licenses and authentication. No changes to Hub validators or Stageout are
 required to use the declared extension through their existing STAC flow.
 
+## Validate with PySTAC
+
+The development dependencies include `pystac[validation]`. For a native STAC Item
+before schema publication, use PySTAC's validator with the candidate schema in
+its cache:
+
+```python
+import json
+from pathlib import Path
+
+import pystac
+from pystac.validation import JsonSchemaSTACValidator
+
+schema = json.loads(Path("json-schema/schema.json").read_text(encoding="utf-8"))
+item = pystac.Item.from_file("your-item.json")
+if schema["$id"] not in item.stac_extensions:
+    item.stac_extensions.append(schema["$id"])
+validator = JsonSchemaSTACValidator()
+validator.schema_cache[schema["$id"]] = schema
+item.validate(validator=validator)
+```
+
+This validates core STAC and every declared extension, raising
+`pystac.STACValidationError` for invalid metadata. Other declared extensions may
+require network access. After the release URL is published, `item.validate()`
+can resolve axis3hub normally without the local cache entry.
+
 ## Run the tests
 
 ```bash
