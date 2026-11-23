@@ -1,0 +1,343 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/projection/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/raster/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/timestamps/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/authentication/v1.1.0/schema.json"
+  ],
+  "id": "SS-FR-FD-B_20261001T080122d985Z",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          23.811244,
+          38.161549
+        ],
+        [
+          23.977218,
+          38.161549
+        ],
+        [
+          23.977218,
+          38.263718
+        ],
+        [
+          23.811244,
+          38.263718
+        ],
+        [
+          23.811244,
+          38.161549
+        ]
+      ]
+    ]
+  },
+  "bbox": [
+    23.811244,
+    38.161549,
+    23.977218,
+    38.263718
+  ],
+  "properties": {
+    "created": "2026-10-01T07:50:07.988Z",
+    "processing:facility": "AXIS 3 Safety & Security Service Module",
+    "processing:version": "0.1.51",
+    "processing:level": "L4",
+    "processing:datetime": "2026-10-01T08:01:22.985Z",
+    "processing:software": {
+      "repo": "https://github.com/HellenicSpaceCenter/SW-01-02-Rapid-and-Accurate-Flood-Delineation-2024-onwards",
+      "docker": "axis3/flood-delineation:1.0.0",
+      "workflow": "cwl/flood_delineation.cwl@1.0.0"
+    },
+    "keywords": [
+      "SS-FR-FD-B",
+      "Ad-hoc",
+      "0.1.51",
+      "Adhoc",
+      "N. Anatolikis Attikis",
+      "2026-10-01T08:01:22Z",
+      "Greece",
+      "Flood",
+      "Flood mapping",
+      "Flood extent",
+      "Flood delineation",
+      "Water Depth",
+      "flooded area",
+      "inundation mapping",
+      "flood event mapping",
+      "flood maps",
+      "rapid mapping",
+      "emergency mapping",
+      "flood damage assessment",
+      "civil protection",
+      "natural hazards",
+      "natural risk zones",
+      "flood monitoring",
+      "flood response",
+      "sar"
+    ],
+    "title": "Flood Delineation - N. Anatolikis Attikis _ 2026-09-28T20:47:10Z",
+    "description": "Binary map showing water and non-water areas.",
+    "gsd": 3,
+    "platform": "iceye, planetscope",
+    "instruments": [
+      "X-Band SAR",
+      "PS2"
+    ],
+    "proj:code": "EPSG:2100",
+    "proj:centroid": {
+      "lat": 38.21263,
+      "lon": 23.89423
+    },
+    "datetime": null,
+    "start_datetime": "2026-09-28T20:47:10Z",
+    "end_datetime": "2026-09-28T20:47:10Z",
+    "quality:description": "HIGH",
+    "published": "2026-10-01T08:01:54.214Z",
+    "hub:processId": "7dc09172-bd6c-11f1-904f-527c511104c9",
+    "hub:engineId": "ss-fr-fd-b-ops5-30-09-v8_7dc09172-bd6c-11f1-904f-527c511104c9",
+    "hub:thematicService": "security",
+    "license": "GNSSP-NCVAL",
+    "auth:schemes": {
+      "oidc": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "http://iam-uat-release-keycloak.iam-uat.svc.cluster.local/realms/axes-3/.well-known/openid-configuration"
+      }
+    }
+  },
+  "links": [
+    {
+      "rel": "ceos-ard-specification",
+      "href": "https://s3.spacehub.hsc.gov.gr/hub-public/stac/CEOS_CARD4L/GNEO-HUB-TN-PKH-SY-0002-v2.0_ARD%20products%20ATBD.pdf",
+      "type": "application/pdf",
+      "title": "GR ARD Engine",
+      "auth:refs": [
+        "oidc"
+      ]
+    },
+    {
+      "rel": "preview",
+      "href": "../../../assets/SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_Thumbnail_20260928T204710Z_20261001T080122d882Z.jpg",
+      "type": "image/jpeg",
+      "title": "thumbnail",
+      "auth:refs": [
+        "oidc",
+        "oidc"
+      ]
+    },
+    {
+      "rel": "self",
+      "type": "application/geo+json",
+      "href": "https://stac-catalogue.spacehub-uat.hsc.gov.gr/stac/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z",
+      "auth:refs": [
+        "oidc"
+      ]
+    },
+    {
+      "rel": "root",
+      "type": "application/json",
+      "href": "https://stac-catalogue.spacehub-uat.hsc.gov.gr/stac",
+      "auth:refs": [
+        "oidc"
+      ]
+    },
+    {
+      "rel": "parent",
+      "type": "application/json",
+      "href": "https://stac-catalogue.spacehub-uat.hsc.gov.gr/stac/collections/SS-FR",
+      "auth:refs": [
+        "oidc"
+      ]
+    },
+    {
+      "rel": "collection",
+      "type": "application/json",
+      "href": "https://stac-catalogue.spacehub-uat.hsc.gov.gr/stac/collections/SS-FR",
+      "auth:refs": [
+        "oidc"
+      ]
+    }
+  ],
+  "assets": {
+    "Flood_Depth_20261001T080122d985Z": {
+      "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flood_Depth_20261001T080122d985Z",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Flood Delineation - N. Anatolikis Attikis - Flood Depth - 2026-09-28T20:47:10Z",
+      "description": "Estimated water depth derived from DEM and flood extent.",
+      "product:id": "SS-FR-FD-B_20261001T080122d985Z_RAS-CNT_0000",
+      "gsd": 3,
+      "raster:bands": [
+        {
+          "nodata": 0,
+          "data_type": "uint16",
+          "spatial_resolution": 3
+        }
+      ],
+      "proj:code": "EPSG:2100",
+      "proj:shape": [
+        4089,
+        5087
+      ],
+      "proj:bbox": [
+        482971.81570459134,
+        4223000.971672609,
+        498220.8454732899,
+        4235258.349837384
+      ],
+      "proj:transform": [
+        2.997646897719399,
+        0,
+        482971.81570459134,
+        0,
+        -2.997646897719399,
+        4235258.349837384,
+        0,
+        0,
+        1
+      ],
+      "hub:relativePath": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_FloodDepth_20260928T204710Z_20261001T080122d882Z.tif",
+      "file:local_path": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_FloodDepth_20260928T204710Z_20261001T080122d882Z.tif",
+      "hub:checksum": "d7bb32a5a8d4d81f771730a181faf04b8b79867efdbfd883fd069a8e3276e219",
+      "Flood_Depth_20261001T080122d985Z-tiles-template": {
+        "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flood_Depth_20261001T080122d985Z/tiles/WebMercatorQuad/{z}/{x}/{y}",
+        "type": "image/png",
+        "roles": [
+          "related",
+          "tiles"
+        ],
+        "title": "Flood_Depth_20261001T080122d985Z Titiler Tiles",
+        "templated": true
+      },
+      "Flood_Depth_20261001T080122d985Z-query-template": {
+        "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flood_Depth_20261001T080122d985Z/point/{lat},{lon}",
+        "type": "application/json",
+        "roles": [
+          "related",
+          "query"
+        ],
+        "title": "Flood_Depth_20261001T080122d985Z Titiler Query",
+        "templated": true
+      },
+      "roles": [
+        "data"
+      ]
+    },
+    "Flood_Extent_20261001T080122d985Z": {
+      "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flood_Extent_20261001T080122d985Z",
+      "type": "image/tiff; application=geotiff; profile=cloud-optimized",
+      "title": "Flood Delineation - N. Anatolikis Attikis - Flood Extent - 2026-09-28T20:47:10Z",
+      "description": "Binary Classification image water vs non water areas.",
+      "product:id": "SS-FR-FD-B_20261001T080122d985Z_RAS-CLA_0000",
+      "gsd": 3,
+      "raster:bands": [
+        {
+          "nodata": 0,
+          "data_type": "float32",
+          "spatial_resolution": 3
+        }
+      ],
+      "proj:code": "EPSG:2100",
+      "proj:shape": [
+        4089,
+        5087
+      ],
+      "proj:bbox": [
+        482971.81570459134,
+        4223000.971672609,
+        498220.8454732899,
+        4235258.349837384
+      ],
+      "proj:transform": [
+        2.997646897719399,
+        0,
+        482971.81570459134,
+        0,
+        -2.997646897719399,
+        4235258.349837384,
+        0,
+        0,
+        1
+      ],
+      "hub:relativePath": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_FloodExtent_20260928T204710Z_20261001T080049d267Z.tif",
+      "file:local_path": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_FloodExtent_20260928T204710Z_20261001T080049d267Z.tif",
+      "hub:checksum": "1e25fd36f8610b81bdefb8f1c9ce47a06115583a93fc698f8412b31e484104f9",
+      "Flood_Extent_20261001T080122d985Z-tiles-template": {
+        "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flood_Extent_20261001T080122d985Z/tiles/WebMercatorQuad/{z}/{x}/{y}",
+        "type": "image/png",
+        "roles": [
+          "related",
+          "tiles"
+        ],
+        "title": "Flood_Extent_20261001T080122d985Z Titiler Tiles",
+        "templated": true
+      },
+      "Flood_Extent_20261001T080122d985Z-query-template": {
+        "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flood_Extent_20261001T080122d985Z/point/{lat},{lon}",
+        "type": "application/json",
+        "roles": [
+          "related",
+          "query"
+        ],
+        "title": "Flood_Extent_20261001T080122d985Z Titiler Query",
+        "templated": true
+      },
+      "roles": [
+        "data"
+      ]
+    },
+    "Flooded_Areas_20261001T080122d985Z": {
+      "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/Flooded_Areas_20261001T080122d985Z",
+      "type": "application/geo+json",
+      "title": "Flood Delineation - N. Anatolikis Attikis - Flooded Areas - 2026-09-28T20:47:10Z",
+      "description": "Vector layer of flooded areas.",
+      "product:id": "SS-FR-FD-B_20261001T080122d985Z_VEC-POL_0000",
+      "proj:code": "EPSG:2100",
+      "hub:relativePath": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_FloodedAreas_20260928T204710Z_20261001T080049d196Z.geojson",
+      "file:local_path": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_FloodedAreas_20260928T204710Z_20261001T080049d196Z.geojson",
+      "hub:checksum": "f80ff40d8bf2e04b6536e30110a7c60c3d1c3647e7cdebd44234983e5b38e277",
+      "hub:workspaceName": "security",
+      "hub:layerName": "625cd943-7921-4934-847c-987e428e5c02",
+      "Flooded_Areas_20261001T080122d985Z-tiles-template": {
+        "href": "http://geoserver.data-access-uat.svc.cluster.local:8080/geoserver/gwc/service/wmts?service=WMTS&request=GetTile&version=1.0.0&layer=security%3A625cd943-7921-4934-847c-987e428e5c02&style=&tilematrixset=WebMercatorQuad&tilematrix=WebMercatorQuad%3A{z}&tilecol={x}&tilerow={y}&format=image%2Fpng",
+        "type": "image/png",
+        "roles": [
+          "related",
+          "tiles"
+        ],
+        "title": "Flooded_Areas_20261001T080122d985Z GeoServer WMTS Tiles",
+        "templated": true
+      },
+      "roles": [
+        "data"
+      ]
+    },
+    "thumbnail": {
+      "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/thumbnail",
+      "type": "image/jpeg",
+      "title": "thumbnail",
+      "description": "thumbnail",
+      "product:id": "SS-FR-FD-B_20261001T080122d985Z_NON-GEO_0000",
+      "hub:relativePath": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_Thumbnail_20260928T204710Z_20261001T080122d882Z.jpg",
+      "file:local_path": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Security_FloodDelineation_NAnatolikisAttikis_Thumbnail_20260928T204710Z_20261001T080122d882Z.jpg",
+      "hub:checksum": "6661abe69a19a6d68ed86ab8d52590173ca4118a01bf5ad9678ea1cf08183564",
+      "roles": [
+        "thumbnail"
+      ]
+    },
+    "lineage": {
+      "href": "https://data-access.spacehub-uat.hsc.gov.gr/v2/collections/SS-FR/items/SS-FR-FD-B_20261001T080122d985Z/assets/lineage",
+      "hub:relativePath": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Flood_Delineation_N_Anatolikis_Attikis_2026_09_28T20_47_10Z_ProcessingLineage_20260928T204710Z_20261001T080122d985Z_lineage.txt",
+      "file:local_path": "SS-FR/SS-FR-FD-B_20261001T080122d985Z/Flood_Delineation_N_Anatolikis_Attikis_2026_09_28T20_47_10Z_ProcessingLineage_20260928T204710Z_20261001T080122d985Z_lineage.txt",
+      "hub:checksum": "bbf5099052700b49ce42e5b94afa4d4eece805449e3e4c051bf676a0e6a538f3",
+      "roles": [
+        "metadata"
+      ]
+    }
+  },
+  "collection": "SS-FR"
+}
