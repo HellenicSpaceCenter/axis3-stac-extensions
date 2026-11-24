@@ -78,7 +78,7 @@ stages:
               git fetch origin --tags
 
               echo "Pushing all tags to GitHub..."
-              git push github --tags || echo "Tags already up to date."
+              git push github --tags
 
               echo "Mirror complete."
 
