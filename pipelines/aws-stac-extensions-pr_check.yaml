@@ -1,0 +1,29 @@
+name: axis3-stac-extensions - PR Check Pipeline
+
+# PR builds are triggered by the build validation branch policy on develop/main.
+trigger: none
+
+pool:
+  name: Axis3
+
+variables:
+  - group: Github-devops
+  - name: APP_NAME
+    value: "axis3-stac-extensions"
+  - name: tag
+    value: dev-$(Build.BuildId)
+  - name: IMAGE_REPO
+    value: 'ghcr.io/hellenicspacecenter/axis3-hub-'
+
+stages:
+  - stage: Check
+    displayName: "PR Checks"
+    jobs:
+      - template: templates/fragment-check.yml
+
+  - stage: Build
+    jobs:
+      - template: templates/build-and-push.yaml
+        parameters:
+          image_tag: "$(tag)"
+          push: false

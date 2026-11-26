@@ -1,0 +1,79 @@
+jobs:
+  - job: BuildTowncrier
+    displayName: 'Towncrier build'
+    steps:
+      - checkout: self
+        persistCredentials: true
+        fetchDepth: 0
+
+      - script: |
+          wget -qO- https://astral.sh/uv/install.sh | sh
+        displayName: "Install uv"
+
+      - script: |
+          source $HOME/.local/bin/env
+          uv tool install "towncrier>=24.8"
+          towncrier --version
+        displayName: "Install towncrier"
+
+      - script: |
+          set -e
+          source $HOME/.local/bin/env
+
+          TODAY=$(date +%F)
+
+          echo "Running Towncrier build"
+          files=$(find newsfragments -type f | grep -E '\.(feature|fix|doc|removal|misc)\.md$' | wc -l)
+          if [ "$files" -gt 0 ]; then
+              echo "Setting Azure DevOps remote"
+              git remote set-url origin $(Build.Repository.Uri)
+
+              echo "Checking out main"
+              git checkout -B main origin/main
+              git pull origin main --ff-only
+
+              echo "Running Towncrier build..."
+              towncrier build --version "$LIBRARY_TAG" --yes --date "$TODAY"
+
+              echo "Git status after Towncrier:"
+              git status
+
+              echo "Git diff stats:"
+              git diff --stat
+
+              git config user.email "azure-pipelines@planetek.it"
+              git config user.name "Azure Pipelines"
+
+              echo "Commit Towncrier changelog"
+              git add -A
+              git commit -m "chore: update changelog [towncrier]"
+
+              echo "Creating git tag $LIBRARY_TAG..."
+              git tag $LIBRARY_TAG
+
+              echo "Pushing git tag $LIBRARY_TAG..."
+              git push origin $LIBRARY_TAG
+
+              echo "Push Towncrier changelog to main"
+              git push origin HEAD:main
+
+              echo "Merge and pull main into develop..."
+              git checkout -B develop origin/develop
+              git pull origin develop --ff-only
+              git merge origin/main --no-ff -m "chore: sync main into develop [towncrier]"
+
+              echo "Removing newsfragments..."
+              find newsfragments/ -type f | grep -E '\.(fix|misc|feature|doc|removal)\.md$' | xargs -r rm -f
+
+              git add -A
+              git commit -m "chore: cleanup fragments [towncrier]" || echo "No fragments left to clean up."
+
+              echo "Pushing develop..."
+              git push origin develop
+          else
+            echo "No need to update the CHANGELOG since no newsfragments have been found."
+          fi
+        displayName: 'Build and push Towncrier changelog'
+        env:
+          System.AccessToken: $(System.AccessToken)
+          LIBRARY_TAG: $(LIBRARY_TAG)

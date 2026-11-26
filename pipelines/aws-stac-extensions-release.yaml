@@ -1,0 +1,64 @@
+name: axis3-stac-extensions_Release_Pipeline
+trigger:
+  - main
+
+pool:
+  name: Axis3
+
+variables:
+  - group: Github-devops
+  - name: APP_NAME
+    value: "axis3-stac-extensions"
+  - name: IMAGE_REPO
+    value: 'ghcr.io/hellenicspacecenter/axis3-hub-'
+
+stages:
+
+  - stage: Gate
+    displayName: "Detect Towncrier Commit"
+    jobs:
+      - job: Detect
+        steps:
+          - checkout: self
+            fetchDepth: 2
+
+          - bash: |
+              MSG=$(git log -1 --pretty=%B)
+              echo "$MSG"
+
+              if echo "$MSG" | grep -q "\[towncrier\]"; then
+                echo "Towncrier commit detected → cancelling pipeline"
+                echo "##vso[build.cancel]"
+                exit 0
+              fi
+
+              echo "Normal commit → continue"
+            displayName: "Gate check"
+
+  - stage: Versioning
+    displayName: "Set Version"
+    dependsOn: Gate
+    jobs:
+      - template: templates/set-version.yml
+
+  - stage: Towncrier
+    dependsOn: Versioning
+    condition: succeeded()
+    variables:
+      LIBRARY_TAG: $[ stageDependencies.Versioning.ReadVersion.outputs['SetImageTag.LIBRARY_TAG_OUTPUT'] ]
+    jobs:
+      - template: templates/towncrier-build.yaml
+
+  - stage: BuildAndPush
+    displayName: "Build and Push Docker Image"
+    dependsOn:
+      - Versioning
+      - Towncrier
+    condition: succeeded()
+    variables:
+      LIBRARY_TAG: $[ stageDependencies.Versioning.ReadVersion.outputs['SetImageTag.LIBRARY_TAG_OUTPUT'] ]
+    jobs:
+      - template: templates/build-and-push.yaml
+        parameters:
+          image_tag: $(LIBRARY_TAG)
+          push: true
