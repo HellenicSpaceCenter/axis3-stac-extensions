@@ -1,0 +1,39 @@
+parameters:
+  - name: image_tag
+    type: string
+    default: "testing-phase"
+  - name: push
+    type: boolean
+    default: false
+
+jobs:
+  - job: BuildImage
+    displayName: "Build and Push Docker Images"
+    variables:
+      IMAGE_TAG: "${{ parameters.image_tag }}"
+
+    steps:
+      - checkout: self
+        clean: true 
+
+      - script: |
+          echo "$(GITHUB_TOKEN)" | docker login ghcr.io \
+            --username $(GITHUB_USERNAME) \
+            --password-stdin
+        displayName: 'Login to GitHub Container Registry'
+        env:
+          GITHUB_TOKEN: $(GITHUB_TOKEN)
+          GITHUB_USERNAME: $(GITHUB_USERNAME)
+
+      - script: |
+          echo "Building main Docker image..."
+          echo "Image: $(IMAGE_REPO)$(APP_NAME):$(IMAGE_TAG)"
+          cd $(Build.SourcesDirectory)
+          docker build --no-cache -t $(IMAGE_REPO)$(APP_NAME):$(IMAGE_TAG) .
+        displayName: "Build Main Docker Image"
+
+      - script: |
+          echo "Pushing main Docker image..."
+          docker push $(IMAGE_REPO)$(APP_NAME):$(IMAGE_TAG)
+        displayName: "Push Main Docker Image"
+        condition: eq('${{ parameters.push }}', true)

@@ -1,0 +1,53 @@
+name: axis3-stac-extensions - Develop Pipeline
+
+trigger:
+  branches:
+    include:
+      - develop
+
+pool:
+  name: Axis3
+
+variables:
+  - group: Github-devops
+  - name: APP_NAME
+    value: "axis3-stac-extensions"
+  - name: tag
+    value: dev-$(Build.BuildId)
+  - name: IMAGE_REPO
+    value: 'ghcr.io/hellenicspacecenter/axis3-hub-'
+
+stages:
+
+  - stage: Gate
+    displayName: "Detect Towncrier Commit"
+
+    jobs:
+      - job: Detect
+        steps:
+
+          - checkout: self
+            fetchDepth: 2
+
+          - bash: |
+              echo "Checking changes..."
+
+              MSG=$(git log -1 --pretty=%B)
+              echo "$MSG"
+
+              if echo "$MSG" | grep -q "\[towncrier\]"; then
+                echo "Towncrier commit detected → cancelling pipeline"
+                echo "##vso[build.cancel]"
+                exit 0
+              fi
+
+              echo "Normal commit → continue"
+            displayName: "Gate check"
+
+  - stage: BuildAndPush
+    displayName: "Build Docker Image"
+    jobs:
+      - template: templates/build-and-push.yaml
+        parameters:
+          image_tag: "$(tag)"
+          push: true

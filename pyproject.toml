@@ -12,10 +12,28 @@ dependencies = [
 dev = [
     "pystac[validation]==1.13.0",
     "pytest>=8.3,<9",
+    "towncrier>=24.8",
 ]
 
 [tool.uv]
 package = false
+
+[tool.towncrier]
+name = "Axis3 STAC Extensions"
+directory = "newsfragments"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+title_format = "## [{version}] - {project_date}"
+issue_format = "#{issue}"
+
+[tool.towncrier.fragment.feature]
+[tool.towncrier.fragment.fix]
+[tool.towncrier.fragment.removal]
+[tool.towncrier.fragment.doc]
+
+[tool.towncrier.fragment.misc]
+name = "Misc"
+showcontent = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
